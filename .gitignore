@@ -1,0 +1,18 @@
+# Ignore environment file
+.env
+
+# Ignore git files
+.git/*
+
+# Python virtual environment
+.venv/*
+__pycache__
+
+# MacOS Files
+.DS_Store
+
+# Ignore Ruff Files
+.ruff_cache/*
+
+# Any data files
+*.json
