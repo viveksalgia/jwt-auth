@@ -1,5 +1,5 @@
 from app.utils.settings import settings
-from app.utils.schema import Users, StatusResponse, CheckUserName, UserCredentials, UpdateUserCredentials
+from app.utils.schema import Users, StatusResponse, CheckUserName
 
 from fastapi import APIRouter, Request
 from fastapi.responses import JSONResponse
@@ -99,7 +99,7 @@ async def get_user_details(username: str=None) -> JSONResponse:
         if username is not None:
             query = f"select * from users where username = '{username}'"
         else:
-            query = f"select * from users"
+            query = "select * from users"
         
         logger.info(f"Query - {query}")
 

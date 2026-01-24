@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from typing import List
 
 class Users(BaseModel):
     user_id: int | None = Field(default=None, description="unique database id for the user")
