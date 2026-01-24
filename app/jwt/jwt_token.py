@@ -6,9 +6,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Annotated
 
 import jwt
-from fastapi import Depends, FastAPI, HTTPException, status, APIRouter
-from fastapi.responses import JSONResponse
-from jwt.exceptions import InvalidTokenError
+from fastapi import Depends, HTTPException, status, APIRouter
 
 import logging
 import json
