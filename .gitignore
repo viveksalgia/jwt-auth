@@ -16,3 +16,6 @@ __pycache__
 
 # Any data files
 *.json
+
+# Docker Commands
+dockercmds.txt

@@ -46,7 +46,9 @@ class Settings:
                 password=self.db_pass,
                 host=self.db_host,  # e.g., "localhost" or an IP address
                 port=self.db_port,             # Default MariaDB port
-                database=self.database
+                database=self.database,
+                # Disable SSL for local development; enable in production with proper certificates
+                ssl=False
             )
             return conn
         except mariadb.Error as e:
