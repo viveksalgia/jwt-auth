@@ -8,6 +8,7 @@ from typing import Annotated
 import jwt
 from fastapi import Depends, HTTPException, status, APIRouter
 from fastapi.security import OAuth2PasswordBearer
+from fastapi.templating import Jinja2Templates
 
 from jwt.exceptions import InvalidTokenError
 
@@ -18,6 +19,9 @@ logging.basicConfig(level=settings.log_level, format="%(asctime)s - %(levelname)
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/jwt/v1")
+
+# Templates
+templates = Jinja2Templates(directory="app/templates")
 
 UserDep = Annotated[dict, Depends(validate_password)]
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
