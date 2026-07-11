@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Salgia Networx LLC</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-wrapper">
+            <!-- Logo and Header -->
+            <div class="auth-header">
+                <div class="logo">
+                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="30" cy="30" r="28" stroke="#2563EB" stroke-width="2"/>
+                        <path d="M20 35C20 30 24 26 30 26C36 26 40 30 40 35" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="30" cy="22" r="3" fill="#2563EB"/>
+                    </svg>
+                </div>
+                <h1>Salgia Networx LLC</h1>
+                <p>Create Your Account</p>
+            </div>
+
+            <!-- Signup Form -->
+            <form class="auth-form" method="POST" action="/signup" id="signupForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input 
+                            type="text" 
+                            id="firstName" 
+                            name="firstName" 
+                            class="form-input" 
+                            placeholder="John"
+                            required
+                        >
+                        <span class="error-message" id="firstNameError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="middleName">Middle Name</label>
+                        <input 
+                            type="text" 
+                            id="middleName" 
+                            name="middleName" 
+                            class="form-input" 
+                            placeholder="Michael (Optional)"
+                        >
+                        <span class="error-message" id="middleNameError"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input 
+                        type="text" 
+                        id="lastName" 
+                        name="lastName" 
+                        class="form-input" 
+                        placeholder="Doe"
+                        required
+                    >
+                    <span class="error-message" id="lastNameError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-input" 
+                        placeholder="john.doe@example.com"
+                        required
+                    >
+                    <span class="error-message" id="emailError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="form-input" 
+                            placeholder="At least 8 characters"
+                            required
+                        >
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="password-strength" id="passwordStrength">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <span class="strength-text" id="strengthText"></span>
+                    </div>
+                    <span class="error-message" id="passwordError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Verify Password</label>
+                    <div class="password-wrapper">
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            name="confirmPassword" 
+                            class="form-input" 
+                            placeholder="Re-enter your password"
+                            required
+                        >
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('confirmPassword')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="error-message" id="confirmPasswordError"></span>
+                </div>
+
+                <label class="checkbox-label agree-checkbox">
+                    <input type="checkbox" name="agree" id="agree" required>
+                    <span>I agree to the Terms of Service and Privacy Policy</span>
+                </label>
+                <span class="error-message" id="agreeError"></span>
+
+                <button type="submit" class="btn-primary">Create Account</button>
+
+                <div class="divider">
+                    <span>Already have an account?</span>
+                </div>
+
+                <a href="/login" class="btn-secondary">Sign In Here</a>
+            </form>
+
+            <!-- Success/Error Messages -->
+            <div id="successMessage" class="message success-message" style="display:none;"></div>
+            <div id="errorMessage" class="message error-message-box" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', path='/js/validation.js') }}"></script>
+    <script>
+        // Real-time password strength checker
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            const strength = calculatePasswordStrength(password);
+            updatePasswordStrengthUI(strength);
+        });
+
+        function calculatePasswordStrength(password) {
+            let strength = 0;
+            if (password.length >= 8) strength++;
+            if (password.length >= 12) strength++;
+            if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^a-zA-Z0-9]/.test(password)) strength++;
+            return strength;
+        }
+
+        function updatePasswordStrengthUI(strength) {
+            const fill = document.getElementById('strengthFill');
+            const text = document.getElementById('strengthText');
+            const colors = ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e'];
+            const labels = ['Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
+
+            fill.style.width = (strength * 20) + '%';
+            fill.style.backgroundColor = colors[strength - 1] || '#e5e7eb';
+            text.textContent = labels[strength - 1] || '';
+            text.style.color = colors[strength - 1] || '#6b7280';
+        }
+
+        document.getElementById('signupForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const agree = document.getElementById('agree').checked;
+            let isValid = true;
+
+            // Clear previous errors
+            document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+
+            // Validation
+            if (!firstName) {
+                document.getElementById('firstNameError').textContent = 'First name is required';
+                isValid = false;
+            } else if (!/^[a-zA-Z\s'-]+$/.test(firstName)) {
+                document.getElementById('firstNameError').textContent = 'First name contains invalid characters';
+                isValid = false;
+            }
+
+            if (!lastName) {
+                document.getElementById('lastNameError').textContent = 'Last name is required';
+                isValid = false;
+            } else if (!/^[a-zA-Z\s'-]+$/.test(lastName)) {
+                document.getElementById('lastNameError').textContent = 'Last name contains invalid characters';
+                isValid = false;
+            }
+
+            if (!email) {
+                document.getElementById('emailError').textContent = 'Email is required';
+                isValid = false;
+            } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                document.getElementById('emailError').textContent = 'Enter a valid email address';
+                isValid = false;
+            }
+
+            if (!password) {
+                document.getElementById('passwordError').textContent = 'Password is required';
+                isValid = false;
+            } else if (password.length < 8) {
+                document.getElementById('passwordError').textContent = 'Password must be at least 8 characters';
+                isValid = false;
+            }
+
+            if (!confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Please verify your password';
+                isValid = false;
+            } else if (password !== confirmPassword) {
+                document.getElementById('confirmPasswordError').textContent = 'Passwords do not match';
+                isValid = false;
+            }
+
+            if (!agree) {
+                document.getElementById('agreeError').textContent = 'You must agree to the terms';
+                isValid = false;
+            }
+
+            if (isValid) {
+                // Submit form (in real app, use AJAX)
+                this.submit();
+            }
+        });
+
+        function togglePasswordVisibility(fieldId) {
+            const field = document.getElementById(fieldId);
+            field.type = field.type === 'password' ? 'text' : 'password';
+        }
+    </script>
+</body>
+</html>

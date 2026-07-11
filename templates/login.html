@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Salgia Networx LLC</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="auth-wrapper">
+            <!-- Logo and Header -->
+            <div class="auth-header">
+                <div class="logo">
+                    <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="30" cy="30" r="28" stroke="#2563EB" stroke-width="2"/>
+                        <path d="M20 35C20 30 24 26 30 26C36 26 40 30 40 35" stroke="#2563EB" stroke-width="2" stroke-linecap="round"/>
+                        <circle cx="30" cy="22" r="3" fill="#2563EB"/>
+                    </svg>
+                </div>
+                <h1>Salgia Networx LLC</h1>
+                <p>Secure Authentication System</p>
+            </div>
+
+            <!-- Login Form -->
+            <form class="auth-form" id="loginForm">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        class="form-input" 
+                        placeholder="Enter your username"
+                    >
+                    <span class="error-message" id="usernameError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-input-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="form-input" 
+                            placeholder="Enter your password"
+                        >
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <span class="error-message" id="passwordError"></span>
+                </div>
+
+                <div class="remember-forgot">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="remember" id="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#forgot" class="forgot-link">Forgot password?</a>
+                </div>
+
+                <button type="button" class="btn-primary" onclick="login()">Login</button>
+                
+                <div class="divider">
+                    <span>New to Salgia Networx?</span>
+                </div>
+
+                <!-- <button type="button" class="btn-secondary" onclick="register()">Create an Account</button> -->
+                <a href="/register" class="btn-secondary">Create an Account</a>
+            </form>
+
+            <!-- Success/Error Messages -->
+            <div id="successMessage" class="message success-message" style="display:none;"></div>
+            <div id="errorMessage" class="message error-message-box" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', path='/js/validation.js') }}"></script>
+    <script>
+        async function login() {
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            let isValid = true;
+
+            // Clear previous errors
+
+            document.getElementById('errorMessage').style.display = 'none';
+
+            console.log('Username:', username);
+            console.log('Password:', password);
+
+            // Validation
+            if (!username) {
+                document.getElementById('usernameError').textContent = 'Username is required';
+                isValid = false;
+            }
+
+            if (!password) {
+                document.getElementById('passwordError').textContent = 'Password is required';
+                isValid = false;
+            }
+
+            if (isValid) {
+                // Submit form (in real app, use AJAX)
+                // this.submit();
+                const response = await fetch('/users/v1/validate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization' : 'Basic ' + btoa(username + ':' + password)
+                    },
+                })
+                
+                if (response.status == 202){
+                    document.getElementById('successMessage').textContent = 'Login successful! Redirecting...';
+                    document.getElementById('successMessage').style.display = 'block';
+                    setTimeout(() => {
+                        window.location.href = '/dashboard'; // Redirect to dashboard
+                    }, 2000);
+                } else {
+                    const result = await response.json();
+                    document.getElementById('errorMessage').textContent = 'Login failed. Please try again.';
+                    document.getElementById('errorMessage').style.display = 'block';
+                }
+            }
+        };
+
+        function togglePasswordVisibility(fieldId) {
+            const field = document.getElementById(fieldId);
+            field.type = field.type === 'password' ? 'text' : 'password';
+        }
+
+    </script>
+</body>
+</html>

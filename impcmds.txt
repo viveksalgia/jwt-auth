@@ -1,0 +1,30 @@
+# Docker Build
+docker build --no-cache  -t mar132026_authapp .
+
+# Run docker image with mounting env file and adding custom host and exposing ports
+docker run --add-host="mariadb.networx.com:172.20.10.236" -p 8080:8080 --env-file ./.env mar132026_authapp
+
+
+# Kubernetes commands
+
+# Create Namespace
+kubectl create namespace development
+
+# yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: development
+  labels:
+    name: development
+
+
+# Load local Docker image to Kubernetes
+sudo ctr -n k8s.io images import networx_sso.tar
+
+# Apply the deployment
+kubectl apply -f networx_sso-deployment.yaml
+
+
+#Expose service
+kubectl expose deployment/networx-sso-deployment --type=NodePort --port=8080 --target-port=8080 -n networx
