@@ -37,6 +37,14 @@ class Settings:
         self.token_expiry: int | None = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
         self.passwordhash = PasswordHash.recommended()
 
+        # Callback URLs a client app may ask to be redirected to after login (comma separated, exact match).
+        # The first entry is the default when the client sends none.
+        self.allowed_redirect_uris: list[str] = [
+            u.strip()
+            for u in os.getenv("ALLOWED_REDIRECT_URIS", "http://localhost:8000/auth/callback").split(",")
+            if u.strip()
+        ]
+
 
         
     def get_mariadb_cursor(self):

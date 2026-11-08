@@ -1,5 +1,8 @@
 # Docker Build
-docker build --no-cache  -t mar132026_authapp .
+docker build --no-cache  -t networx_sso:1.0.0 .
+
+# Docker Save
+docker save -o networx_sso.tar networx_sso:1.0.0
 
 # Run docker image with mounting env file and adding custom host and exposing ports
 docker run --add-host="mariadb.networx.com:172.20.10.236" -p 8080:8080 --env-file ./.env mar132026_authapp
