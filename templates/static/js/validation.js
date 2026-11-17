@@ -360,6 +360,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Check which form is on the page and initialize accordingly
     if (document.getElementById('loginForm')) {
         initializeLoginValidation();
+        
         // No unsaved-changes warning on login: it fires on the post-login redirect.
     }
 
